@@ -9,9 +9,7 @@ BEGIN {
     read(data)
 }
 
-function read(data) {
-    cmd = "cat" " " data
-    while (cmd | getline line)
-        # TODO: parse the line
-    close(cmd)
+function read(input) {
+    while ((getline artist < input) > 0)
+        ARGV[ARGC++] = artist
 }
