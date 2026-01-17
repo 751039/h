@@ -6,6 +6,9 @@ BEGIN {
     basepath = get_xdg_path() "/" base
     data     = basepath "/" filename
 
+    sitehead = "https://www.last.fm/music/"
+    sitetail = "/+shoutbox"
+
     read(data)
 }
 
@@ -21,6 +24,6 @@ function read(input) {
         sub(/^[ \t]*/, "", artist)
         sub(/[ \t]*$/, "", artist)
         gsub(" ", "+", artist)
-        ARGV[ARGC++] = artist
+        ARGV[ARGC++] = sitehead artist sitetail
     }
 }
