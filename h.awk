@@ -12,6 +12,18 @@ BEGIN {
     read(data)
 }
 
+index($0, date) {
+    for (i = 0; i < 10; i++) getline shout
+    print shout
+}
+
+function getdate() {
+    cmd = "date +%Y-%m-%d"
+    cmd | getline date
+    close(cmd)
+    return date
+}
+
 function get_xdg_path() {
     cmd = "printf '%s\n' " " ${XDG_DATA_HOME:-$HOME/.local/share}"
     cmd | getline xdg
@@ -24,6 +36,13 @@ function read(input) {
         sub(/^[ \t]*/, "", artist)
         sub(/[ \t]*$/, "", artist)
         gsub(" ", "+", artist)
-        ARGV[ARGC++] = sitehead artist sitetail
+        ARGV[ARGC++] = scrape(artist, sitehead artist sitetail)
     }
+}
+
+function scrape(name, link) {
+    out = "/tmp/" name ".html"
+    cmd = "curl" " -L " link " > " out
+    system(cmd)
+    return out
 }
