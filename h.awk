@@ -1,6 +1,7 @@
 #!/usr/bin/awk -f
 BEGIN {
     base     = "h"
+    date     = getdate()
 
     filename = "artists"
     basepath = get_xdg_path() "/" base
@@ -14,6 +15,7 @@ BEGIN {
 
 index($0, date) {
     for (i = 0; i < 10; i++) getline shout
+    sub(/^ */, "> ", shout)
     print shout
 }
 
