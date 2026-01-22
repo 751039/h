@@ -12,6 +12,7 @@ BEGIN {
 
     say("fetching artist shoutboxes as of " date)
     read(data)
+    say("processing " nartists " web pages...")
 }
 
 index($0, date) {
@@ -45,6 +46,7 @@ function get_xdg_path() {
 
 function read(input) {
     while ((getline artist < input) > 0) {
+        nartists++
         sub(/^[ \t]*/, "", artist)
         sub(/[ \t]*$/, "", artist)
         gsub(" ", "+", artist)
