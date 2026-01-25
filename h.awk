@@ -23,6 +23,8 @@ index($0, date) {
     if (name != prev) print ""
 
     sub(/^ */, "> ", shout)
+    gsub("&#34;", "\"", shout)
+    gsub("&#39;", "'", shout)
     print name, shout
 }
 
@@ -50,11 +52,11 @@ function get_xdg_path() {
 
 function read(input) {
     while ((getline artist < input) > 0) {
-        nartists++
-        sub(/^[ \t]*/, "", artist)
-        sub(/[ \t]*$/, "", artist)
-        gsub(" ", "+", artist)
-        ARGV[ARGC++] = scrape(artist, sitehead artist sitetail)
+	nartists++
+	sub(/^[ \t]*/, "", artist)
+	sub(/[ \t]*$/, "", artist)
+	gsub(" ", "+", artist)
+	ARGV[ARGC++] = scrape(artist, sitehead artist sitetail)
     }
 }
 
