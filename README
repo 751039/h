@@ -1,2 +1,66 @@
 h
 -
+
+This is a small utility written in POSIX-compliant AWK that crawls
+user-defined artist shoutboxes on last.fm and prints shouts published
+throughout the day.
+
+There is currently no way for you to parse past shouts, though.  I may
+or may not add this functionality in the future.
+
+
+dependencies
+------------
+
+h.awk uses the curl package to scrape web pages.
+
+
+usage
+-----
+
+  $ ./h.awk
+
+Let’s start by creating a directory that will later contain a file
+named “artists”:
+
+  $ mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/h"
+
+It’s important to create a list of musicians whose shoutboxes we want
+to check out:
+
+  $ cat << EOF >> "${XDG_DATA_HOME:-$HOME/.local/share}h/artists"
+  Nocturnal Emissions
+  Cabaret Voltaire
+  Current 93
+  Bourbonese Qualk
+  EOF
+
+As shown in the following snippet, proper capitalization isn’t
+required for the program to work correctly:
+
+	    CURRENT 93
+cabaRET voltAIre
+    nocTURNal eMISSiONs
+
+On January 26, 2026, h.awk produces the following output based on the
+previously defined artists:
+
+  $ ./h.awk
+  h: fetching artist shoutboxes as of 2026-01-26
+  h: processing 4 web pages...
+
+As you can see, no one has posted anything on this date yet.
+
+* * *
+
+Some users may want to use emojis in their comments, so make sure you
+have a font that supports Unicode.
+
+On Debian GNU/Linux, you can install such a font this way:
+
+  $ sudo apt-get install fonts-symbola
+
+You may also need to rebuild the font cache after the installation is
+complete:
+
+  $ fc-cache -fv
