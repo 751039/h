@@ -41,20 +41,15 @@ function die(message) {
     exit(2)
 }
 
-function check(arg) {
-    if (arg == dep) {
-	cmd = "command -v"
-	rdr = ">/dev/null 2>&1"
-	return (system(cmd " " arg " " rdr) == 0 ? 1 : 0)
-    }
-    return (system("test -f" " " arg) == 0 ? 1 : 0)
-}
-
 function getdate() {
-    cmd = "date +%Y-%m-%d"
-    cmd | getline date
-    close(cmd)
-    return date
+    pattern = "[0-9]{4}(-[0-9]{2}){2}"
+    if (ARGV[1] !~ pattern) {
+        cmd = "date +%Y-%m-%d"
+        cmd | getline date
+        close(cmd)
+        return date
+    }
+    return ARGV[1]
 }
 
 function stylise(name) {
@@ -71,13 +66,27 @@ function get_xdg_path() {
     return xdg
 }
 
+function check(arg) {
+    if (arg == dep) {
+        cmd = "command -v"
+        rdr = ">/dev/null 2>&1"
+        return (system(cmd " " arg " " rdr) == 0 ? 1 : 0)
+    }
+    return (system("test -f" " " arg) == 0 ? 1 : 0)
+}
+
 function read(input) {
+    if (ARGV[1] == "") redownload = "true"
+    ARGC = 1
     while ((getline artist < input) > 0) {
-	nartists++
-	sub(/^[ \t]*/, "", artist)
-	sub(/[ \t]*$/, "", artist)
-	gsub(" ", "+", artist)
-	ARGV[ARGC++] = scrape(artist, sitehead artist sitetail)
+        nartists++
+        sub(/^[ \t]*/, "", artist)
+        sub(/[ \t]*$/, "", artist)
+        gsub(" ", "+", artist)
+        if (redownload == "true")
+            ARGV[ARGC++] = scrape(artist, sitehead artist sitetail)
+        else
+            ARGV[ARGC++] = store(artist, sitehead artist sitetail)
     }
 }
 
@@ -87,3 +96,5 @@ function scrape(name, link) {
     system(cmd)
     return out
 }
+
+function store(name) { return "/tmp/" name ".html" }
