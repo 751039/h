@@ -86,7 +86,7 @@ function read(input) {
         if (redownload == "true")
             ARGV[ARGC++] = scrape(artist, sitehead artist sitetail)
         else
-            ARGV[ARGC++] = store(artist, sitehead artist sitetail)
+            ARGV[ARGC++] = store(artist)
     }
 }
 
