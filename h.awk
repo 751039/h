@@ -29,6 +29,8 @@ index($0, date) {
     sub(/^ */, "> ", shout)
     gsub("&#34;", "\"", shout)
     gsub("&#39;", "'", shout)
+    gsub("&gt;", ">", shout)
+    gsub("&lt;", "<", shout)
     print name, shout
 }
 
