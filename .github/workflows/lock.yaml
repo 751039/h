@@ -1,0 +1,26 @@
+name: lockdown
+
+on:
+  issues:
+    types: opened
+  pull_request_target:
+    types: opened
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/repo-lockdown@v5
+        with:
+          issue-comment:
+            Any issues opened here will be ignored.
+          lock-issue: true
+          close-issue: true
+          pr-comment:
+            Any merge requests opened here will be ignored.
+          lock-pr: true
+          close-pr: true
