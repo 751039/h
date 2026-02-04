@@ -14,7 +14,7 @@ BEGIN {
     check(dep) || die("utility is not installed: " dep)
     check(data) || die("file does not exist: " data)
 
-    say("fetching artist shoutboxes as of " date)
+    hasargs() || say("fetching artist shoutboxes as of " date)
     read(data)
     say("processing " nartists " web pages...")
 }
@@ -29,6 +29,8 @@ index($0, date) {
     sub(/^ */, "> ", shout)
     gsub("&#34;", "\"", shout)
     gsub("&#39;", "'", shout)
+    gsub("&gt;", ">", shout)
+    gsub("&lt;", "<", shout)
     print name, shout
 }
 
@@ -86,9 +88,11 @@ function read(input) {
         if (redownload == "true")
             ARGV[ARGC++] = scrape(artist, sitehead artist sitetail)
         else
-            ARGV[ARGC++] = store(artist, sitehead artist sitetail)
+            ARGV[ARGC++] = store(artist)
     }
 }
+
+function hasargs() { return (ARGV[1] != "") ? 1 : 0 }
 
 function scrape(name, link) {
     out = "/tmp/" name ".html"
