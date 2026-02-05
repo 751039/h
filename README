@@ -5,9 +5,6 @@ This is a small utility written in POSIX-compliant AWK that crawls
 user-defined artist shoutboxes on last.fm and prints shouts published
 throughout the day.
 
-There is currently no way for you to parse past shouts, though.  I may
-or may not add this functionality in the future.
-
 
 dependencies
 ------------
@@ -15,10 +12,18 @@ dependencies
 h.awk uses the curl package to scrape web pages.
 
 
+installation
+------------
+
+On most GNU/Linux distributions, you can install h.awk like this:
+
+  $ sudo install -g root -m 755 -o root ./h.awk /usr/local/bin/
+
+
 usage
 -----
 
-  $ ./h.awk
+  $ h.awk [YYYY-MM-DD]
 
 Let’s start by creating a directory that will later contain a file
 named “artists”:
@@ -28,7 +33,7 @@ named “artists”:
 It’s important to create a list of musicians whose shoutboxes we want
 to check out:
 
-  $ cat << EOF >> "${XDG_DATA_HOME:-$HOME/.local/share}h/artists"
+  $ cat << EOF >> "${XDG_DATA_HOME:-$HOME/.local/share}/h/artists"
   Nocturnal Emissions
   Cabaret Voltaire
   Current 93
@@ -38,25 +43,54 @@ to check out:
 As shown in the following snippet, proper capitalization isn’t
 required for the program to work correctly:
 
-	    CURRENT 93
+            CURRENT 93
 cabaRET voltAIre
     nocTURNal eMISSiONs
 
-On January 26, 2026, h.awk produces the following output based on the
+
+parsing recent shouts
+---------------------
+
+Firstly, let’s run h.awk without any arguments.  This will fetch all
+the relevant web pages for us to parse at a later date.
+
+On February 5, 2026, h.awk produces the following output based on the
 previously defined artists:
 
-  $ ./h.awk
-  h: fetching artist shoutboxes as of 2026-01-26
+  $ h.awk
+  h: fetching artist shoutboxes as of 2026-02-05
   h: processing 4 web pages...
 
 As you can see, no one has posted anything on this date yet.
 
+
+parsing shouts published on a given date
+----------------------------------------
+
+Since we ran h.awk once without any arguments, it pulled all the
+relevant web pages from last.fm and saved them in a temporary
+directory.  If we wanted to look up shouts published yesterday, two
+weeks—or even months—ago, we could easily do so without downloading
+each page again by giving the script a specific date in the format of
+“YYYY-MM-DD”:
+
+  $ h.awk 2026-01-23
+  h: processing 4 web pages...
+
+  CABARET VOLTAIRE > my new favourite guys
+
+  CURRENT 93 > They are totally different acts with different goals of artistic expression. It's like comparing a piece of roast beef with a chocolate cake. Both are excellent in their own way, depending on mood and taste of the consumer at the time.
+  CURRENT 93 > Totally! I’m simply comparing the 2 cause of how much they tend to overlap with each other
+  CURRENT 93 > I misunderstood, I thought "they wipe di6" meant they were far superior. I'm almost 150 years old so I'm somewhat out of touch with young-people speak
+
+The script parses the index page of the comments, so many older shouts
+won’t be displayed.
+
 * * *
 
-Some users may want to use emojis in their comments, so make sure you
-have a font that supports Unicode.
-
-On Debian GNU/Linux, you can install such a font this way:
+Some posters may want to use emojis in their comments, so make sure
+you have a font that supports Unicode.  On Debian GNU/Linux, you can
+install such a font this way:
 
   $ sudo apt-get install fonts-symbola
 
